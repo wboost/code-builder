@@ -1,0 +1,13 @@
+package $servicePackage;
+
+import com.${packageName}.common.base.service.BaseService;
+import ${entityPackage}.${entityName};
+
+/**
+ * (TODO)一句话说明该接口的作用
+ * @author ${author}
+ * @date ${createTime}
+ */
+public interface ${entityName}Service extends BaseService<${entityName}>{
+
+}

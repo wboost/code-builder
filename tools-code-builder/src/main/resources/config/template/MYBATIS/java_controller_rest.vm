@@ -1,0 +1,88 @@
+package $controllerPackage;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+
+import top.wboost.common.base.controller.BaseController;
+import top.wboost.common.annotation.Explain;
+import top.wboost.common.base.entity.ResultEntity;
+import top.wboost.common.system.code.SystemCode;
+import top.wboost.common.base.page.QueryPage;
+
+import ${entityPackage}.${entityName};
+import ${servicePackage}.${entityName}Service;
+
+/**
+ * ${remarks}控制器
+ * @className ${entityName}Repository
+ * @author ${author}
+ * @date ${createTime}
+ * @version 1.0.0
+ */
+@RestController
+@RequestMapping(value = "/${entityInstance}")
+public class ${entityName}Controller extends BaseController {
+
+    @Autowired
+	private ${entityName}Service ${entityInstance}Service; 
+
+    /**
+     * 根据id查询${remarks}
+     * @param id $pk.fieldName
+     */
+    @GetMapping(value = "/{id}")
+    @Explain(value = "根据id查询数据", systemCode = SystemCode.QUERY_FAIL)
+    public ResultEntity queryById(@PathVariable("id") $pk.javaType id) {
+        ${entityName} ${entityInstance} = ${entityInstance}Service.findById(id);
+        return ResultEntity.success(SystemCode.QUERY_OK).setData(${entityInstance}).build();
+    }
+
+    /**
+     * 查询${remarks}列表
+     */
+    @GetMapping
+    @Explain(value = "列表查询", systemCode = SystemCode.QUERY_FAIL)
+    public ResultEntity queryList(${entityName} ${entityInstance}, QueryPage page) {
+        Page<${entityName}> result = ${entityInstance}Service.findList(${entityInstance}, page);
+        return ResultEntity.success(SystemCode.QUERY_OK).setPage(result).build();
+    }
+
+    /**
+     * 快速根据id删除${remarks}
+     * @param id $pk.fieldName
+     */
+    @DeleteMapping(value = "/{id}")
+    @Explain(value = "根据id删除数据", systemCode = SystemCode.DEL_FAIL)
+    public ResultEntity deleteById(@PathVariable("id") $pk.javaType id) {
+        boolean status = ${entityInstance}Service.delete(id);
+        return ResultEntity.success(SystemCode.DEL_OK).setData(status).build();
+    }
+
+    /**
+     * 保存${remarks}
+     */
+    @PostMapping
+    @Explain(value = "保存${remarks}", systemCode = SystemCode.ADD_FAIL)
+    public ResultEntity save(${entityName} ${entityInstance}) {
+        ${entityName} ${entityInstance}Save = ${entityInstance}Service.save(${entityInstance});
+        return ResultEntity.success(SystemCode.ADD_OK).setData(${entityInstance}Save).build();
+    }
+
+    /**
+     * 更新${remarks}
+     */
+    @PutMapping(value = "/{id}")
+    @Explain(value = "更新${remarks}", systemCode = SystemCode.UPDATE_FAIL)
+    public ResultEntity updateById(@PathVariable("id") $pk.javaType id, ${entityName} ${entityInstance}) {
+        ${entityName} ${entityInstance}Update = ${entityInstance}Service.update(id, ${entityInstance});
+        return ResultEntity.success(SystemCode.UPDATE_OK).setData(${entityInstance}Update).build();
+    }
+
+}

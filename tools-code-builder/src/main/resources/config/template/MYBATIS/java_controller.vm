@@ -1,0 +1,122 @@
+package $controllerPackage;
+
+import java.util.List;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.${packageName}.common.base.controller.BaseController;
+import com.${packageName}.common.constant.Prompt;
+import ${entityPackage}.${entityName} ;
+import ${modelPackage}.${entityName}Model;
+import ${servicePackage}.${entityName}Service;
+
+
+/**
+ * (TODO)一句话说明该类的作用
+ * @author ${author}
+ * @date ${createTime}
+ */
+@Controller
+@RequestMapping(value = "/${packageSuffix}/${entityInstance}") 
+public class ${entityName}Controller extends BaseController{
+
+	@SuppressWarnings("unused")
+	private static Logger log= Logger.getLogger(${entityName}Controller.class);
+	
+	@Autowired
+	private ${entityName}Service ${entityInstance}Service; 
+	
+	/**
+	 * 根据id获取数据
+	 * @author:${author}
+	 * @date ${createTime}
+	 */
+	@RequestMapping(value = "/getId", method = RequestMethod.GET)
+	@ResponseBody
+	public String getId(Integer id){
+		try{
+			${entityName} ${entityInstance}  = ${entityInstance}Service.queryById(id);
+			if(${entityInstance}  == null){
+				return failMessage(Prompt.VALIDATE_NO_RECORD);
+			}
+			return successMessage(${entityInstance});
+		}catch(Exception e){
+			e.printStackTrace();
+			return failMessage(Prompt.VALIDATE_NO_RECORD);
+		}
+	}
+	
+	/**
+	 * 获取表格数据
+	 * @author:${author}
+	 * @date ${createTime}
+	 */
+	@RequestMapping(value = "/dataList", method = RequestMethod.GET)
+	@ResponseBody
+	public String  dataList(${entityName}Model ${entityInstance}Model){
+		try{
+			List<${entityName}> dataList = ${entityInstance}Service.queryList(${entityInstance}Model);
+			return successMessage(${entityInstance}Model, dataList);
+		}catch(Exception e){
+			e.printStackTrace();
+			return failMessage(Prompt.QUERY_FAIL);
+		}
+	}
+	
+	/**
+	 * 添加数据
+	 * @author:${author}
+	 * @date ${createTime}
+	 */
+	@RequestMapping(value = "/add", method = RequestMethod.POST)
+	@ResponseBody
+	public String add(${entityName} ${entityInstance}){
+		try {
+			${entityInstance}Service.add(${entityInstance});
+			return successMessage(Prompt.CHANGE_ADD_SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return failMessage(Prompt.CHANGE_ADD_FAIL);
+		}
+	}
+	
+	/**
+	 * 修改数据
+	 * @author:${author}
+	 * @date ${createTime}
+	 */
+	@RequestMapping(value = "/update", method = RequestMethod.POST)
+	@ResponseBody
+	public String update(${entityName} ${entityInstance}){
+		try {
+			${entityInstance}Service.update(${entityInstance});
+			return successMessage(Prompt.CHANGE_UPDATE_SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return failMessage(Prompt.CHANGE_UPDATE_FAIL);
+		}
+	}
+
+	/**
+	 * 删除数据
+	 * @author:${author}
+	 * @date ${createTime}
+	 */
+	@RequestMapping(value = "/delete", method = RequestMethod.POST)
+	@ResponseBody
+	public String delete(Integer[] id) {
+		try {
+			${entityInstance}Service.delete(id);
+			return successMessage(Prompt.CHANGE_DEL_SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return failMessage(Prompt.CHANGE_DEL_FAIL);
+		}
+	}
+
+}

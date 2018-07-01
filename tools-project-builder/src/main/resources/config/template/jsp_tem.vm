@@ -1,0 +1,33 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<!DOCTYPE HTML>
+<html>
+  <head>
+   
+    
+    <title></title>
+
+	<jsp:include page="/views/common/head-common.jsp"/>
+	<jsp:include page="/views/common/head-common-manager.jsp"/>
+
+  </head>
+  
+  <body>
+  	<ul id="toolbar" class="btnBox clear">
+		<li class="btn addBtn">添加</li>
+		<li class="text queryText">	<input type="text">	</li>
+  		<li class="btn queryBtn">查询</li>
+	</ul>
+  	<table id="bootstrapTable"></table>
+	
+	<div id="show" style="display:none">
+		<form action="" id="formData" name="formData">
+			<input type="hidden" id="hiddenId" name="${pk.fieldName}">
+			
+		</form>
+	</div>
+	
+	
+  </body>
+  <script type="text/javascript" src="${ctx_file}/js/${packageSuffix}/${entityInstance}.js"></script>
+
+</html>

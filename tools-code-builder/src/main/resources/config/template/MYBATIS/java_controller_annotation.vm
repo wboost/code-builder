@@ -1,0 +1,13 @@
+package $controllerPackage;
+
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import top.wboost.common.base.restful.EnableBaseRestful;
+import top.wboost.common.base.controller.BaseController;
+
+@RestController
+@RequestMapping(value = "/${entityInstance}")
+@EnableBaseRestful
+public class ${entityName}Controller extends BaseController {
+
+}

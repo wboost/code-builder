@@ -1,0 +1,19 @@
+package ${servicePackage}.impl;
+
+import org.springframework.stereotype.Service;
+
+import top.wboost.common.base.service.impl.BaseJpaServiceImpl;
+import ${servicePackage}.${entityName}Service;
+import ${entityPackage}.${entityName};
+import $respositoryPackage.${entityName}Repository;
+
+
+/**
+ * ${remarks}服务接口实现类
+ * @author ${author}
+ * @date ${createTime}
+ */
+@Service("${entityInstance}Service")
+public class ${entityName}ServiceImpl extends BaseJpaServiceImpl<${entityName}, ${entityName}Repository, $pk.javaType> implements ${entityName}Service {
+
+}

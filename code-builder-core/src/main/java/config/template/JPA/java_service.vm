@@ -1,0 +1,13 @@
+package $servicePackage;
+
+import top.wboost.common.base.service.BaseJpaService;
+import ${entityPackage}.${entityName};
+
+/**
+ * ${remarks}服务接口
+ * @author ${author}
+ * @date ${createTime}
+ */
+public interface ${entityName}Service extends BaseJpaService<${entityName}, $pk.javaType>{
+
+}
