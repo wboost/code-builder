@@ -1,51 +1,29 @@
-文件结构
-|common:通用管理项目
+wboost ： code-builder
+=========================
+项目/代码 生成构建工具
+=========================
+[![Build Status](http://www.wboost.top:18080/build.svg)](http://www.wboost.top)
+[![Packagist](http://www.wboost.top:18080/version.svg)](http://www.wboost.top)
+[![Yii2](http://www.wboost.top:18080/auth.svg)](http://www.wboost.top)
 
-|+common-utils:通用工具类包
+[Home Page](http://www.wboost.top) | [官方主页](http://www.wboost.top) | [中文说明]() | [文档手册](http://www.wboost.top/framework/spring-boot-starter-support/docs).
 
-|+common-log:通用日志传输包
+如果你喜欢，可以开始使用以下生成工具了 : )
 
-|+common-web:网络通用工具类基础包
+* code-builder-core 生成器核心代码
+* tools-project-builder 项目生成器
+* tools-code-builder 代码生成器
 
-|+common-cache:通用缓存包
+code
+------------
+```
+git clone https://github.com/wboost/code-builder.git
+```
 
-|+common-distributed:通用分布式处理包
+Quick Start
+------------
 
-|+common-es:通用es处理包
-|++common-es-tools v1.4.2:通用es处理包V1.4.2版本
-|++common-es-tools v2.4.1:通用es处理包V2.4.1版本
-
-|+common-message-queue:通用消息队列包
-|++common-message-queue-base:通用消息队列基础包
-|++common-message-queue-activemq:通用activemq消息队列包
-|++common-message-queue-redis:通用redis消息队列包
-
-
-依赖结构
-|common-web
-|-common-log
-
-|common-log
-|-common-utils
-
-|common-cache
-|-common-web
-
-|common-distributed
-|-common-cache
-
-|common-es
-|-common-web
-
-|common-message-queue-base
-|-common-web
-
-|common-message-queue-redis
-|-common-message-queue-base
-|-common-cache
-
-|common-message-queue-activemq
-|-common-message-queue-base
-
-
-
+* mvn clean package
+* copy tools-code-builder-jar-with-dependencies.jar、tools-project-builder-jar-with-dependencies.jar from target to file 
+* copy tools-code-builder\config.properties or tools-project-builder\config.properties to same file
+* java -Dfile.encoding=UTF-8 -jar (use).jar
