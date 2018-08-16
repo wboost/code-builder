@@ -47,11 +47,11 @@
 			<version>5.1.16</version>
 		</dependency>
 
-		<!-- <dependency>
+		<dependency>
 			<groupId>com.chinaoly</groupId>
 			<artifactId>ojdbc6</artifactId>
 			<version>11.2</version>
-		</dependency> -->
+		</dependency>
 
 	</dependencies>
 

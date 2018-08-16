@@ -33,7 +33,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>top.wboost.generator.CreateProject</mainClass>
+							<mainClass>top.wboost.generator.CreateCode</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>
