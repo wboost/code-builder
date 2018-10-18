@@ -25,7 +25,12 @@
 		<!-- /config -->
 	</properties>
 
-	
+	<repositories>
+		<repository>
+			<id>private</id>
+			<url>http://192.168.16.181:8081/repository/maven-public/</url>
+		</repository>
+	</repositories>
 	
 	<!-- build会共享给子项目 -->
 	<build>

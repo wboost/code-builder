@@ -71,10 +71,10 @@ public class ProjectGenerate2 implements Generate {
         if (ormName.equals("MYBATIS")) {
             System.out.println("use mybatis");
             mybatis = true;
-            context.put("use_orm_jar", "common-mybatis-spring-boot-starter");
-        } else {
+            context.put("use_orm_jar", "mybatis-spring-boot-starter");
+        } else if (ormName.equals("JPA")) {
             System.out.println("use JPA");
-            context.put("use_orm_jar", "common-datasource-spring-boot-starter");
+            context.put("use_orm_jar", "datasource-spring-boot-starter");
         }
         System.out.println("init pom.xml");
         Template template_pom = VelocityUtil.getTemplate("config/template/" + ormName, "project_pom.vm");
