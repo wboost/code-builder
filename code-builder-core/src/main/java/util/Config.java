@@ -9,6 +9,8 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.alibaba.fastjson.JSONObject;
+import config.Constant;
 import org.apache.velocity.VelocityContext;
 
 import factory.CodeGenerateFactory;
@@ -57,6 +59,9 @@ public final class Config {
     public static String PACKAGE_JS = "";
     public static String PACKAGE_JSP = "";
     public static String PACKAGE_REPOSITORY = "";
+    /**工具包版本**/
+    public static String TOOLS_VERSION = "";
+    public static ThreadLocal<Constant.GenerateOrmType> orm = new ThreadLocal<>();
 
     static {
         Properties prop = new Properties();
@@ -66,6 +71,7 @@ public final class Config {
             InputStream userin = new FileInputStream("config.properties");
             userprop.load(userin);
             prop.load(in);
+            System.out.println(JSONObject.toJSONString(prop));
             //数据库信息配置
             DRIVER = userprop.getProperty("db.driver").trim();
             URL = userprop.getProperty("db.url").trim();
@@ -78,7 +84,8 @@ public final class Config {
             //模版路径配置
             TEMPLATE_BASE = prop.getProperty("template_path").trim();
             System.out.println("TEMPLATE_BASE:" + TEMPLATE_BASE);
-            TEMPLATE_PATH = TEMPLATE_BASE + "/" + CodeGenerateFactory.userConfig.get().getGenerateOrmType();
+            //TEMPLATE_PATH = TEMPLATE_BASE + "/" + CodeGenerateFactory.userConfig.get().getGenerateOrmType();
+            TEMPLATE_PATH = TEMPLATE_BASE;
             TEMPLATE_CONTROLLER = prop.getProperty("template_controller").trim();
             TEMPLATE_CONTROLLER_ANNOTATION = prop.getProperty("template_controller_annotation").trim();
             TEMPLATE_CONTROLLER_REST = prop.getProperty("template_controller_rest").trim();
@@ -90,6 +97,8 @@ public final class Config {
                     + prop.getProperty("template_mapper").trim();
             TEMPLATE_JAVA_MAPPER = prop.getProperty("template_java_mapper").trim();
 
+            /**版本**/
+            TOOLS_VERSION = prop.getProperty("tools.version").trim();
             /**生成JS文件路径**/
 
             JS_STORE_PATH = prop.getProperty("js_store_path").trim();
@@ -119,12 +128,15 @@ public final class Config {
 
     public static VelocityContext getContext(Table table) {
         VelocityContext context = new VelocityContext();
-        if (table == null)
-            return context;
-        context.put("tableName", table.getTableName().toLowerCase());
-        context.put("tableNameReal", table.getTableName());
+        if (table != null) {
+            context.put("tableName", table.getTableName().toLowerCase());
+            context.put("tableNameReal", table.getTableName());
+        }
+        System.out.println("toolsversion is " + Config.TOOLS_VERSION);
+        context.put("toolsversion", Config.TOOLS_VERSION);
         context.put("mapperXmlPackage", Config.PACKAGE_XML_MAPPER);
         context.put("mapperJavaPackage", Config.PACKAGE_JAVA_MAPPER);
+        context.put("mapperJavaPath", Config.PACKAGE_JAVA_MAPPER.replaceAll("\\.", "/"));
         context.put("entityPackage", Config.PACKAGE_ENTITY);
         context.put("respositoryPackage", Config.PACKAGE_REPOSITORY);
         context.put("packageName", Config.PACKAGE_NAME);
@@ -147,6 +159,7 @@ public final class Config {
         context.put("value", "value");
         context.put("isOk", "isOk");
         context.put("id", "id");
+        context.put("orm", Config.orm.get().toString());
         return context;
     }
 

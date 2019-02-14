@@ -28,7 +28,7 @@ public class FileCopyUtil {
     /**
      * 当前运行环境资源文件是在文件里面的
      * @param url
-     * @param folderPath
+     * @param toFolderPath
      * @throws IOException
      */
     private static void copyFileResources(URL url, String targetolderPath, String toFolderPath) throws IOException {

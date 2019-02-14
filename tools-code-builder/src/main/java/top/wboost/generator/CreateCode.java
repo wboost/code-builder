@@ -8,6 +8,7 @@ import config.Constant.GenerateCodeType;
 import config.Constant.GenerateDbType;
 import config.Constant.GenerateOrmType;
 import factory.CodeGenerateFactory;
+import util.Config;
 
 /**
  * 创建代码，具体配置在src/config/config.properties中
@@ -17,7 +18,7 @@ import factory.CodeGenerateFactory;
  */
 public class CreateCode {
 
-    public static ThreadLocal<String> charset = new ThreadLocal<>();
+
 
     public static void main(String[] args) throws Exception {
         String charset = null;
@@ -44,6 +45,7 @@ public class CreateCode {
         GenerateDbType generateDbType = GenerateDbType.valueOf(prop.get("generateDbType").toString().toUpperCase());
         /**初始化**/
         CodeGenerateFactory.initConfig(charset, enableBaseRestful, enableRestful, generateOrmType, generateDbType);
+        Config.orm.set(generateOrmType);
         Scanner scan = new Scanner(System.in, "gbk");
         System.out.println("请输入表名(如T_DEMO)");
         String tableName = scan.next();

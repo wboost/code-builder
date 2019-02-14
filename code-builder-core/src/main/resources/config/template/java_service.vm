@@ -1,13 +1,29 @@
+#if($orm == "JPA")
 package $servicePackage;
 
-import com.${packageName}.common.base.service.BaseService;
+import top.wboost.common.base.service.BaseJpaService;
 import ${entityPackage}.${entityName};
 
 /**
- * (TODO)一句话说明该接口的作用
- * @author ${author}
- * @date ${createTime}
- */
-public interface ${entityName}Service extends BaseService<${entityName}>{
+* ${remarks}服务接口
+* @author ${author}
+* @date ${createTime}
+*/
+public interface ${entityName}Service extends BaseJpaService<${entityName}, $pk.javaType>{
 
 }
+#else
+package $servicePackage;
+
+import top.wboost.common.base.service.BaseService;
+import ${entityPackage}.${entityName};
+
+/**
+* ${remarks}服务接口
+* @author ${author}
+* @date ${createTime}
+*/
+public interface ${entityName}Service extends BaseService<${entityName}, $pk.javaType>{
+
+}
+#end

@@ -16,7 +16,10 @@
 	</modules>
 
 	<properties>
-
+		<!-- tools -->
+		<tools-group-id>top.wboost</tools-group-id>
+		<tools-group-version>3.1.7.RELEASE</tools-group-version>
+		<!-- /tools -->
 		<!-- config -->
 		<java.version>1.8</java.version>
 		<junit.version>4.12</junit.version>
@@ -27,10 +30,44 @@
 
 	<repositories>
 		<repository>
-			<id>private</id>
-			<url>http://192.168.16.181:8081/repository/maven-public/</url>
+			<id>aliyun</id>
+			<url>http://192.168.3.189/nexus/content/groups/public/</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
 		</repository>
 	</repositories>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>${tools-group-id}</groupId>
+				<version>${tools-group-version}</version>
+				<artifactId>common</artifactId>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>${tools-group-id}</groupId>
+				<version>${tools-group-version}</version>
+				<artifactId>spring-boot-starter-support</artifactId>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>${tools-group-id}</groupId>
+            <artifactId>common-boot</artifactId>
+        </dependency>
+		<dependency>
+			<groupId>com.chinaoly</groupId>
+			<artifactId>ojdbc6</artifactId>
+			<version>11.2</version>
+		</dependency>
+    </dependencies>
 	
 	<!-- build会共享给子项目 -->
 	<build>

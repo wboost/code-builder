@@ -1,32 +1,41 @@
+#if($orm == "JPA")
 package ${servicePackage}.impl;
 
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.${packageName}.common.base.dao.BaseDao;
-import com.${packageName}.common.base.service.impl.BaseServiceImpl;
-import ${daoPackage}.${entityName}Dao;
+import top.wboost.common.base.service.impl.BaseJpaServiceImpl;
 import ${servicePackage}.${entityName}Service;
 import ${entityPackage}.${entityName};
+import $respositoryPackage.${entityName}Repository;
+
 
 /**
- * (TODO)一句话说明该实现类的作用
- * @author ${author}
- * @date ${createTime}
- */
+* ${remarks}服务接口实现类
+* @author ${author}
+* @date ${createTime}
+*/
 @Service("${entityInstance}Service")
-public class ${entityName}ServiceImpl extends BaseServiceImpl<${entityName}> implements ${entityName}Service {
-
-	@SuppressWarnings("unused")
-	private final static Logger log= Logger.getLogger(${entityName}ServiceImpl.class);
-
-	@Autowired
-    private ${entityName}Dao ${entityInstance}Dao;
-	
-	@Override
-	public BaseDao<${entityName}> getDao() {
-		return ${entityInstance}Dao;
-	}
+public class ${entityName}ServiceImpl extends BaseJpaServiceImpl<${entityName}, ${entityName}Repository, $pk.javaType> implements ${entityName}Service {
 
 }
+#else
+package ${servicePackage}.impl;
+
+import org.springframework.stereotype.Service;
+
+import top.wboost.common.base.BaseMybatisServiceImpl;
+import ${servicePackage}.${entityName}Service;
+import ${entityPackage}.${entityName};
+import $mapperJavaPackage.${entityName}Mapper;
+
+
+/**
+* ${remarks}服务接口实现类
+* @author ${author}
+* @date ${createTime}
+*/
+@Service("${entityInstance}Service")
+public class ${entityName}ServiceImpl extends BaseMybatisServiceImpl<${entityName}, ${entityName}Mapper, $pk.javaType> implements ${entityName}Service {
+
+}
+#end

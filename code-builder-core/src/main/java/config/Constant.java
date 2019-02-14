@@ -18,7 +18,7 @@ public class Constant {
     public static String DESKTOP = "C:/Users/Administrator/Desktop/";
 
     public enum GenerateOrmType {
-        JPA, MYBATIS;
+        JPA, MYBATIS,NO;
     }
 
     public enum GenerateDbType {

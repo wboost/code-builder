@@ -1,0 +1,20 @@
+server: 
+  port: 8888
+spring: 
+  mvc: 
+    view: 
+      prefix: /
+      suffix: .html
+#if($orm != "NO")
+common:
+  datasource:
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@192.168.1.225:1521:orcl
+    username:
+    password:
+#if($orm == "MYBATIS")
+  mybatis:
+    mapper-locations:
+    - classpath: ${mapperJavaPath}/*.xml
+#end
+#end

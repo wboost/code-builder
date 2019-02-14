@@ -1,0 +1,13 @@
+spring:
+  profiles:
+    active: dev
+  application:
+    name: ${projectName}
+common:
+  swagger:
+    default-api-param-type: query
+    title: auto-generator-title
+    description: auto-generator-description
+    version: auto-generator-version
+  dev:
+    debug: true

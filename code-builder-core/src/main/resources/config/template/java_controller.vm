@@ -1,122 +1,94 @@
 package $controllerPackage;
 
-import java.util.List;
-
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
-import com.${packageName}.common.base.controller.BaseController;
-import com.${packageName}.common.constant.Prompt;
-import ${entityPackage}.${entityName} ;
-import ${modelPackage}.${entityName}Model;
+import top.wboost.common.base.controller.BaseController;
+import top.wboost.common.annotation.Explain;
+import top.wboost.common.base.entity.ResultEntity;
+import top.wboost.common.system.code.SystemCode;
+import top.wboost.common.base.page.QueryPage;
+
+import ${entityPackage}.${entityName};
 import ${servicePackage}.${entityName}Service;
 
-
 /**
- * (TODO)一句话说明该类的作用
+ * ${remarks}控制器
+ * @className ${entityName}Repository
  * @author ${author}
  * @date ${createTime}
+ * @version 1.0.0
  */
 @Controller
-@RequestMapping(value = "/${packageSuffix}/${entityInstance}") 
-public class ${entityName}Controller extends BaseController{
+@RequestMapping(value = "/${entityInstance}")
+public class ${entityName}Controller extends BaseController {
 
-	@SuppressWarnings("unused")
-	private static Logger log= Logger.getLogger(${entityName}Controller.class);
-	
-	@Autowired
+    @Autowired
 	private ${entityName}Service ${entityInstance}Service; 
-	
-	/**
-	 * 根据id获取数据
-	 * @author:${author}
-	 * @date ${createTime}
-	 */
-	@RequestMapping(value = "/getId", method = RequestMethod.GET)
-	@ResponseBody
-	public String getId(Integer id){
-		try{
-			${entityName} ${entityInstance}  = ${entityInstance}Service.queryById(id);
-			if(${entityInstance}  == null){
-				return failMessage(Prompt.VALIDATE_NO_RECORD);
-			}
-			return successMessage(${entityInstance});
-		}catch(Exception e){
-			e.printStackTrace();
-			return failMessage(Prompt.VALIDATE_NO_RECORD);
-		}
-	}
-	
-	/**
-	 * 获取表格数据
-	 * @author:${author}
-	 * @date ${createTime}
-	 */
-	@RequestMapping(value = "/dataList", method = RequestMethod.GET)
-	@ResponseBody
-	public String  dataList(${entityName}Model ${entityInstance}Model){
-		try{
-			List<${entityName}> dataList = ${entityInstance}Service.queryList(${entityInstance}Model);
-			return successMessage(${entityInstance}Model, dataList);
-		}catch(Exception e){
-			e.printStackTrace();
-			return failMessage(Prompt.QUERY_FAIL);
-		}
-	}
-	
-	/**
-	 * 添加数据
-	 * @author:${author}
-	 * @date ${createTime}
-	 */
-	@RequestMapping(value = "/add", method = RequestMethod.POST)
-	@ResponseBody
-	public String add(${entityName} ${entityInstance}){
-		try {
-			${entityInstance}Service.add(${entityInstance});
-			return successMessage(Prompt.CHANGE_ADD_SUCCESS);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return failMessage(Prompt.CHANGE_ADD_FAIL);
-		}
-	}
-	
-	/**
-	 * 修改数据
-	 * @author:${author}
-	 * @date ${createTime}
-	 */
-	@RequestMapping(value = "/update", method = RequestMethod.POST)
-	@ResponseBody
-	public String update(${entityName} ${entityInstance}){
-		try {
-			${entityInstance}Service.update(${entityInstance});
-			return successMessage(Prompt.CHANGE_UPDATE_SUCCESS);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return failMessage(Prompt.CHANGE_UPDATE_FAIL);
-		}
-	}
 
-	/**
-	 * 删除数据
-	 * @author:${author}
-	 * @date ${createTime}
-	 */
-	@RequestMapping(value = "/delete", method = RequestMethod.POST)
-	@ResponseBody
-	public String delete(Integer[] id) {
-		try {
-			${entityInstance}Service.delete(id);
-			return successMessage(Prompt.CHANGE_DEL_SUCCESS);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return failMessage(Prompt.CHANGE_DEL_FAIL);
-		}
-	}
+    /**
+     * 根据id查询${remarks}
+     * @param id $pk.fieldName
+     */
+    @ResponseBody
+    @GetMapping(value = "/{id}")
+    @Explain(value = "根据id查询数据", systemCode = SystemCode.QUERY_FAIL)
+    public ResultEntity queryById(@PathVariable("id") $pk.javaType id) {
+        ${entityName} ${entityInstance} = ${entityInstance}Service.findById(id);
+        return ResultEntity.success(SystemCode.QUERY_OK).setData(${entityInstance}).build();
+    }
+
+    /**
+     * 查询${remarks}列表
+     */
+    @ResponseBody
+    @GetMapping
+    @Explain(value = "列表查询", systemCode = SystemCode.QUERY_FAIL)
+    public ResultEntity queryList(${entityName} ${entityInstance}, QueryPage page) {
+        Page<${entityName}> result = ${entityInstance}Service.findList(${entityInstance}, page);
+        return ResultEntity.success(SystemCode.QUERY_OK).setPage(result).build();
+    }
+
+    /**
+     * 快速根据id删除${remarks}
+     * @param id $pk.fieldName
+     */
+    @ResponseBody
+    @DeleteMapping(value = "/{id}")
+    @Explain(value = "根据id删除数据", systemCode = SystemCode.DEL_FAIL)
+    public ResultEntity deleteById(@PathVariable("id") $pk.javaType id) {
+        boolean status = ${entityInstance}Service.delete(id);
+        return ResultEntity.success(SystemCode.DEL_OK).setData(status).build();
+    }
+
+    /**
+     * 保存${remarks}
+     */
+    @ResponseBody
+    @PostMapping
+    @Explain(value = "保存${remarks}", systemCode = SystemCode.ADD_FAIL)
+    public ResultEntity save(${entityName} ${entityInstance}) {
+        ${entityName} ${entityInstance}Save = ${entityInstance}Service.save(${entityInstance});
+        return ResultEntity.success(SystemCode.ADD_OK).setData(${entityInstance}Save).build();
+    }
+
+    /**
+     * 更新${remarks}
+     */
+    @ResponseBody
+    @PutMapping(value = "/{id}")
+    @Explain(value = "更新${remarks}", systemCode = SystemCode.UPDATE_FAIL)
+    public ResultEntity updateById(@PathVariable("id") $pk.javaType id, ${entityName} ${entityInstance}) {
+        ${entityName} ${entityInstance}Update = ${entityInstance}Service.update(id, ${entityInstance});
+        return ResultEntity.success(SystemCode.UPDATE_OK).setData(${entityInstance}Update).build();
+    }
 
 }

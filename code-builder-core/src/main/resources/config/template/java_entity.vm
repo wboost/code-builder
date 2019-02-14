@@ -1,18 +1,39 @@
 package $entityPackage;
 
-import java.util.Date;
-import java.sql.Timestamp;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.GeneratedValue;
+import org.hibernate.annotations.GenericGenerator;
 
 /**
- * (TODO)一句话说明该类的作用
+ * ${remarks}实体类
  * @author ${author}
  * @date ${createTime}
  */
-public class $entityName{
+@Entity
+@Table(name = "${tableNameReal}")
+public class $entityName implements java.io.Serializable {
+
+	private static final long serialVersionUID = 1L;
+
+    @Id
+    @Column(name="$pk.name")
+    @GeneratedValue(generator = "UUID")
+#if($orm == "JPA")
+	@GenericGenerator(name = "UUID", strategy = "uuid")
+#else
+    @GeneratedValue(generator = "UUID")
+#end
+    private $pk.javaType $pk.fieldName; //$pk.comment
 
 #foreach ($column in $columns)
+#if($column.fieldName != $pk.fieldName)
+	@Column(name="$column.name")
 	private $column.javaType $column.fieldName; //$column.comment
 #end
+#end 
 
 #foreach ($column in $columns)
 	public ${column.javaType} ${column.getMethod}(){

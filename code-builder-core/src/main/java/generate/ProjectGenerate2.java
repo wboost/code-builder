@@ -7,6 +7,8 @@ import java.io.StringWriter;
 import java.util.List;
 import java.util.Scanner;
 
+import config.Constant;
+import config.InfoSetting;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 
@@ -19,38 +21,33 @@ import vo.Table;
 
 /**
  * 生成java文件
- * @className JavaGenerate
+ *
  * @author jwSun
- * @date 2018年4月18日 上午10:45:31
  * @version 1.0.0
+ * @className JavaGenerate
+ * @date 2018年4月18日 上午10:45:31
  */
 public class ProjectGenerate2 implements Generate {
 
     GenerateCodeType generateCodeType;
+
+    String projectName;
+    String packageName;
+    String modelName;
+    String ormName;
+    String applicationRunName;
 
     public ProjectGenerate2() {
     }
 
     @Override
     public void generate(Table table) throws Exception {
-        Scanner scan = new Scanner(System.in);
-        System.out.println("请输入项目名");
-        String projectName = scan.next();
-        System.out.println("请输入包名(如com.chinaoly)");
-        String packageName = scan.next();
-        System.out.println("请输入模块名(如demo)");
-        String modelName = scan.next();
-        System.out.println("请输入使用的ORM(mybaits/jpa) 默认mybatis");
-        String ormName = scan.next().toUpperCase();
-        if (ormName == null || "".equals(ormName)) {
-            ormName = "MYBATIS";
-        }
-        System.out.println("请输入启动类名称 默认ApplicationRun");
-        String applicationRunName = scan.next();
-        if (applicationRunName == null || "".equals(applicationRunName)) {
-            applicationRunName = "ApplicationRun";
-        }
-        scan.close();
+        InfoSetting.Setting setting = InfoSetting.setting();
+        projectName = setting.getProjectName();
+        packageName = setting.getPackageName();
+        modelName = setting.getModelName();
+        ormName = setting.getOrm().toString();
+        applicationRunName = setting.getAppName();
         System.out.println("projectName:" + projectName);
         System.out.println("packageName:" + packageName);
         System.out.println("modelName:" + modelName);
@@ -67,33 +64,21 @@ public class ProjectGenerate2 implements Generate {
         context.put("packageName", packageName);
         context.put("modelName", modelName);
         context.put("applicationRunName", applicationRunName);
-        boolean mybatis = false;
-        if (ormName.equals("MYBATIS")) {
-            System.out.println("use mybatis");
-            mybatis = true;
-            context.put("use_orm_jar", "mybatis-spring-boot-starter");
-        } else if (ormName.equals("JPA")) {
-            System.out.println("use JPA");
-            context.put("use_orm_jar", "datasource-spring-boot-starter");
-        }
         System.out.println("init pom.xml");
-        Template template_pom = VelocityUtil.getTemplate("config/template/" + ormName, "project_pom.vm");
-        StringWriter writer_pom = new StringWriter();
-        template_pom.merge(context, writer_pom);
-        FileUtil.create("project/" + projectName, "pom.xml", writer_pom.toString());
-        System.out.println("init .classpath");
-        Template template_classpath = VelocityUtil.getTemplate("config/template/" + ormName, "project_classpath.vm");
-        StringWriter writer_classpath = new StringWriter();
-        template_classpath.merge(context, writer_classpath);
-        FileUtil.create("project/" + projectName, ".classpath", writer_classpath.toString());
-        System.out.println("init .project");
-        Template template_project = VelocityUtil.getTemplate("config/template/" + ormName, "project_project.vm");
-        StringWriter writer_project = new StringWriter();
-        template_project.merge(context, writer_project);
-        FileUtil.create("project/" + projectName, ".project", writer_project.toString());
-        System.out.println("init .settings");
-        FileCopyUtil.loadRecourseFromJarByFolder("config/template/" + ormName + "/project_settings",
-                "project/" + projectName + "/.settings");
+        FileUtil.create("project/" + projectName, "pom.xml", VelocityUtil.merge("config/template", "project_pom.vm",context));
+//        System.out.println("init .classpath");
+//        Template template_classpath = VelocityUtil.getTemplate("config/template/" + ormName, "project_classpath.vm");
+//        StringWriter writer_classpath = new StringWriter();
+//        template_classpath.merge(context, writer_classpath);
+//        FileUtil.create("project/" + projectName, ".classpath", writer_classpath.toString());
+//        System.out.println("init .project");
+//        Template template_project = VelocityUtil.getTemplate("config/template/" + ormName, "project_project.vm");
+//        StringWriter writer_project = new StringWriter();
+//        template_project.merge(context, writer_project);
+//        FileUtil.create("project/" + projectName, ".project", writer_project.toString());
+//        System.out.println("init .settings");
+//        FileCopyUtil.loadRecourseFromJarByFolder("config/template/" + ormName + "/project_settings",
+//                "project/" + projectName + "/.settings");
         System.out.println("init files");
         packageName = packageName.replace(".", "/");
         new File("project/" + projectName + "/src/main/java/" + packageName + "/" + modelName + "/controller").mkdirs();
@@ -102,50 +87,37 @@ public class ProjectGenerate2 implements Generate {
                 .mkdirs();
         new File("project/" + projectName + "/src/main/test").mkdirs();
         System.out.println("init resources");
+        //if (setting.getOrm() != Orm.NO) {
         FileCopyUtil.loadRecourseFromJarByFolder("config/template/" + ormName + "/resources",
                 "project/" + projectName + "/src/main/resources");
-        if (mybatis) {
-            new File("project/" + projectName + "/src/main/java/" + packageName + "/" + modelName + "/mapper").mkdirs();
-        } else {
-            new File("project/" + projectName + "/src/main/java/" + packageName + "/" + modelName + "/repository")
-                    .mkdirs();
+        //}
+        if (setting.getOrm() == Constant.GenerateOrmType.MYBATIS) {
+            generatorMybatis();
+        } else if (setting.getOrm() == Constant.GenerateOrmType.JPA) {
+            generatorJpa();
         }
         System.out.println("init applicationRun");
-        Template template_app = VelocityUtil.getTemplate("config/template/" + ormName, "project_applicationRun.vm");
-        StringWriter writer_app = new StringWriter();
-        template_app.merge(context, writer_app);
         FileUtil.create("project/" + projectName + "/src/main/java/" + packageName, applicationRunName + ".java",
-                writer_app.toString());
+                VelocityUtil.merge("config/template", "project_applicationRun.vm",context));
+        System.out.println("init bootstrap.yml");
+        FileUtil.create("project/" + projectName + "/src/main/resources", "bootstrap.yml",
+                VelocityUtil.merge("config/template", "yml_bootstrap.vm",context));
+        System.out.println("init application.yml");
+        FileUtil.create("project/" + projectName + "/src/main/resources", "application.yml",
+                VelocityUtil.merge("config/template", "yml_application.vm",context));
+        System.out.println("init application-dev.yml");
+        FileUtil.create("project/" + projectName + "/src/main/resources", "application-dev.yml",
+                VelocityUtil.merge("config/template", "yml_application_dev.vm",context));
         System.out.println("init project ok...");
     }
 
-    public static void copy(File[] fl, File file) {
-        if (!file.exists()) // 如果文件夹不存在  
-            file.mkdirs(); // 建立新的文件夹  
-        for (int i = 0; i < fl.length; i++) {
-            if (fl[i].isFile()) { // 如果是文件类型就复制文件  
-                try {
-                    FileInputStream fis = new FileInputStream(fl[i]);
-                    FileOutputStream out = new FileOutputStream(
-                            new File(file.getPath() + File.separator + fl[i].getName()));
+    private void generatorMybatis() {
+        new File("project/" + projectName + "/src/main/java/" + packageName + "/" + modelName + "/mapper").mkdirs();
+    }
 
-                    int count = fis.available();
-                    byte[] data = new byte[count];
-                    if ((fis.read(data)) != -1) {
-                        out.write(data); // 复制文件内容  
-                    }
-                    out.close(); // 关闭输出流  
-                    fis.close(); // 关闭输入流  
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            if (fl[i].isDirectory()) { // 如果是文件夹类型  
-                File des = new File(file.getPath() + File.separator + fl[i].getName());
-                des.mkdir(); // 在目标文件夹中创建相同的文件夹  
-                copy(fl[i].listFiles(), des); // 递归调用方法本身  
-            }
-        }
+    private void generatorJpa() {
+        new File("project/" + projectName + "/src/main/java/" + packageName + "/" + modelName + "/repository")
+                .mkdirs();
     }
 
     @Override
